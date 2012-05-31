@@ -7,13 +7,13 @@ Using the Reddit API for communication, this class can create, destroy, and
 manage polls for users on the popular social news site, reddit.com.
 
 ##Author
-Created by [Evan Sneath](http://github.com/evansneath)
+Created by [Evan Sneath](http://github.com/evansneath).
 
 ##License
 This software licensed under the [Open Software License v3.0](http://www.opensource.org/licenses/OSL-3.0).
 
 ##Dependencies
-In order to run, this software requires the following dependencies
+In order to run, this software requires the following dependencies:
 
 * [Python 2.7](http://python.org/)
 * [Reddit API Python Wrapper 1.3.8](https://github.com/mellort/reddit_api)
@@ -25,8 +25,7 @@ The Reddit Poll Bot class is easy to use and modify for specific needs. Document
 in the source code. Here are some simple use case examples.
 
 ###Creating a new bot and submission
-This creates a new poll and automatically generates body text for the submission using the title, description,
-and candidates list.
+This creates a new poll and automatically generates body text for the submission using the title, description, and candidates list.
 ```python
 import reddit_poll_bot
 
@@ -56,8 +55,11 @@ choices and their current voting results are printed.
 # find the desired poll object
 my_poll = bot.find_poll('Vote for the cutest animal!')
 
+# define valid voting choices
+candidates = ['dog', 'cat', 'lizard']
+
 # print each poll choice and its vote count
-for vote in bot.peek_votes(my_poll, candidates=['dog', 'cat', 'lizard']).items():
+for vote in bot.peek_votes(my_poll, candidates).items():
     print 'choice: ' + str(vote[0]) + ' votes: ' + str(vote[1])
 ```
 
@@ -66,7 +68,9 @@ Reddit Vote Bot will automatically tally all of the votes and edit the submissio
 Entering the candidates list restricts accepted entries to those candidates.
 ```python
 # count votes and post the results to the poll
-bot.post_votes('Vote for the cutest animal!', candidates=['dog', 'cat', 'lizard'], show_winner=True)
+title = 'Vote for the cutest animal!'
+candidates = ['dog', 'cat', 'lizard']
+bot.post_votes(title, candidates, show_winner=True)
 ```
 
 ###Deleting a poll
