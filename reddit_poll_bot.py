@@ -72,7 +72,7 @@ class RedditPollBot(object):
             Newly created Reddit API submission object
         """
         instructions = 'To vote for an entry, place the entry name surrounded by asterisks somewhere in your comment.'
-        example = 'Example: \*your choice\*'
+        example = "Example: I'm voting for \*bacon\*!"
         
         # add description to body text
         text = description + '\r\n\r\n'
@@ -99,16 +99,16 @@ class RedditPollBot(object):
             True on success, False on failure
         """
         # delete submission created by the bot with the specified title
-        deleted = False
         poll = self.find_poll(title)
         
+        deleted = False
         if poll is not None:
             poll.delete()
             deleted = True
         
         return deleted
     
-    def post_votes(self, title, show_winner=True):
+    def post_votes(self, title, candidates=None, show_winner=True):
         """Posts submission votes
         
         Updates the given poll with a full count of all votes casted and shows
@@ -116,6 +116,8 @@ class RedditPollBot(object):
         
         Args:
             title: The exact title of the poll to count and post votes
+            candidates: A list of candidates to select from votes. If this is
+                none, any italicized item will be accepted.
             show_winner: A boolean indicating if the winner should be displayed
         
         Returns:
@@ -123,30 +125,30 @@ class RedditPollBot(object):
         """
         # update the submission text with the newest amount of votes
         poll = self.find_poll(title)
-        votes = self.peek_votes(poll)
-        winner = (None, 0)
+        votes = self.peek_votes(poll, candidates)
         
         # compile text for updated poll
-        text =  'THE VOTES ARE IN // POLLING IS CLOSED\r\n'
-        text += '-------------------------------------\r\n'
+        text = poll.selftext + '\r\n\r\n'
+        text +=  'THE VOTES ARE IN // POLLING IS CLOSED\r\n'
+        text += '-------------------------------------\r\n\r\n'
         text += 'RESULTS:                             \r\n\r\n'
         
         # display vote numbers
-        for vote in votes:
-            text += ' * ' + str(vote[0]) + ' : ' + str(vote[1]) + '\r\n\r\n'
-            if int(vote[1]) > winner[1]:
-                winner = vote
+        for vote in votes.items():
+            text += ' * ' + str(vote[0]) + ' : ' + str(vote[1]) + '\r\n'
         
-        # display a winner
+        # display a winner if desired
         if show_winner:
-            text += '\r\nWINNER: ' + str(winner[0]) + '\r\n'
+            text += '\r\nWINNER: ' + max(votes) + '\r\n'
         
+        # edit the pol to include the results
+        editted = False
         if poll.edit(text) is not None:
-            return True
-        else:
-            return False
+            editted = True
+        
+        return editted
     
-    def peek_votes(self, poll):
+    def peek_votes(self, poll, candidates=None):
         """Peek at the current votes
         
         Given a poll object, this method will output a list of tuples of the
@@ -154,30 +156,33 @@ class RedditPollBot(object):
         
         Args:
             poll: A Reddit API submission object of which to count current votes
+            candidates: A list of candidates to select from votes. If this is
+                none, any italicized item will be accepted.
         
         Returns:
-            List of tuples with the candidate name and current number of votes
-            
-            example:
-                ('candidate1':3)
-                ('candidate2':5)
+            Dict with candidate name as key and number of votes as value
         """
         votes = dict()
         
         for comment in poll.comments:
-            # get the first value surrounded by strings
-            vote = re.search('\*\S*\*', str(comment)).group()
-            # return lowercase version of the key w/o spaces and asterisks
-            vote = vote[1:len(vote)-1].strip().lower()
+            # get the first value surrounded by asterisks
+            vote = re.search('\*\w*\*', str(comment))
             
-            # create a new key if it does not exist
-            if vote not in votes:
-                votes[vote] = 0
-            
-            # add a vote for the key
-            votes[vote] += 1
+            if vote is not None:
+                # return lowercase version of the key w/o spaces and asterisks
+                vote = vote.group()
+                vote = vote[1:len(vote)-1].strip().lower()
+                
+                # determine if the italicized value found is valid for the poll
+                if (candidates is not None and vote in candidates) or candidates is None:
+                    # create a new key if it does not exist
+                    if vote not in votes:
+                        votes[vote] = 0
+                    
+                    # add a vote for the valid choice
+                    votes[vote] += 1
         
-        return votes.items()
+        return votes
     
     def get_polls(self):
         """Gets all bot posts
