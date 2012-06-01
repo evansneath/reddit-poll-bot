@@ -71,10 +71,10 @@ class RedditPollBot(object):
         
         # add each candidate into body text 
         for candidate in candidates:
-            text = text + ' * ' + candidate + '\r\n'
+            text += ' * ' + candidate + '\r\n'
         
         # add instructions and example vote to body text
-        text = text + '\r\n' + instructions + '\r\n\r\n' + example
+        text += '\r\n' + instructions + '\r\n\r\n' + example
         
         return self.reddit_api.submit(subreddit, title, text=text)
     
@@ -123,7 +123,7 @@ class RedditPollBot(object):
         
         # compile text for updated poll
         text = poll.selftext + '\r\n\r\n'
-        text +=  'THE VOTES ARE IN // POLLING IS CLOSED\r\n'
+        text += 'THE VOTES ARE IN // POLLING IS CLOSED\r\n'
         text += '-------------------------------------\r\n\r\n'
         text += 'RESULTS:                             \r\n\r\n'
         
