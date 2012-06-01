@@ -4,7 +4,7 @@
 A poll creation and management bot for Reddit.
 
 Using the Reddit API for communication, this class can create, destroy, and
-manage polls for users on the popular social news site, reddit.com.
+manage polls for users on the popular social news site, [Reddit](http://reddit.com).
 
 ##Author
 Created by [Evan Sneath](http://github.com/evansneath).
