@@ -48,18 +48,16 @@ My favorite animals are *lizard*s!
 ```
 
 ###Seeing intermittent poll results
-The ```peek_vote()``` and ```find_poll()``` methods of the Reddit Vote Bot can be used in conjunction
-to unintrusively see results at any time in the polling process. Below is an example where all valid
-choices and their current voting results are printed.
+The ```peek_vote()``` method of the Reddit Vote Bot can be used to unintrusively see results at any 
+time in the polling process. Below is an example where all valid choices and their current voting 
+results are printed.
 ```python
-# find the desired poll object
-my_poll = bot.find_poll('Vote for the cutest animal!')
-
 # define valid voting choices
 candidates = ['dog', 'cat', 'lizard']
+title = 'Vote for the cutest animal!'
 
 # print each poll choice and its vote count
-for vote in bot.peek_votes(my_poll, candidates).items():
+for vote in bot.peek_votes(title, candidates).items():
     print 'choice: ' + str(vote[0]) + ' votes: ' + str(vote[1])
 ```
 
