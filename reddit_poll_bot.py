@@ -15,16 +15,9 @@ class RedditPollBot(object):
     https://github.com/mellort/reddit_api
     
     Attributes:
-        username: The Reddit username of the bot
-        password: The Reddit password of the bot
-        user_agent: The required bot id. see the API rules for more details
-        user: Holds the bot's user object once logged in
+        reddit_api: Holds the Reddit API object for use in class methods
     """
-    username = ''
-    password = ''
-    user_agent = ''
     reddit_api = None
-    user = None
 
     def __init__(self, user_agent):
         """Initialize the RedditPollBot class
@@ -49,12 +42,8 @@ class RedditPollBot(object):
             username: The Reddit username of the bot
             password: The Reddit password of the bot
         """
-        self.username = username
-        self.password = password
-        
         # login bot to reddit
         self.reddit_api.login(username, password)
-        self.user = self.reddit_api.get_redditor(self.username)
     
     def create_poll(self, subreddit, title, description, candidates):
         """Creates a bot submission and the platform for a poll
@@ -211,6 +200,4 @@ class RedditPollBot(object):
         
         for poll in self.get_polls():
             if poll[1].title == title:
-                found = poll[1]
-        
-        return found
+                return poll[1]
