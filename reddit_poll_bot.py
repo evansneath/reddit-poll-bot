@@ -116,8 +116,10 @@ class RedditPollBot(object):
             True on success, False on failure
         """
         # update the submission text with the newest amount of votes
-        poll = self.find_poll(title)
-        votes = self.peek_votes(poll, candidates)
+        votes = self.peek_votes(title, candidates)
+        
+        if votes is None:
+            return False
         
         # compile text for updated poll
         text = poll.selftext + '\r\n\r\n'
@@ -140,53 +142,49 @@ class RedditPollBot(object):
         
         return editted
     
-    def peek_votes(self, poll, candidates=None):
+    def peek_votes(self, title, candidates=None):
         """Peek at the current votes
         
         Given a poll object, this method will output a list of tuples of the
         candidates and their current vote counts.
         
         Args:
-            poll: A Reddit API submission object of which to count current votes
+            title: The exact title of the poll to see current votes
             candidates: A list of candidates to select from votes. If this is
-                none, any italicized item will be accepted.
+                None, any italicized item will be accepted.
         
         Returns:
             Dict with candidate name as key and number of votes as value
         """
         votes = dict()
         
+        # find a poll of the given title
+        poll = self._find_poll(title)
+        
+        if poll is None:
+            return None
+        
         for comment in poll.comments:
             # get the first value surrounded by asterisks
             vote = re.search('\*\w*\*', str(comment))
             
             if vote is not None:
-                # return lowercase version of the key w/o spaces and asterisks
+                # return lowercase version of the key without asterisks
                 vote = vote.group()
-                vote = vote[1:len(vote)-1].strip().lower()
+                vote = vote[1:len(vote)-1].lower()
                 
                 # determine if the italicized value found is valid for the poll
                 if (candidates is not None and vote in candidates) or candidates is None:
                     # create a new key if it does not exist
                     if vote not in votes:
-                        votes[vote] = 0
-                    
-                    # add a vote for the valid choice
-                    votes[vote] += 1
+                        votes[vote] = 1
+                    else:
+                        # add a vote for the valid choice
+                        votes[vote] += 1
         
         return votes
     
-    def get_polls(self):
-        """Gets all bot posts
-        
-        Returns all submission by the logged in bot in enumerated form.
-        
-        Returns:
-            Enumerated list of Reddit API submission objects.
-        """
-        return enumerate(self.user.get_submitted())
-    
-    def find_poll(self, title):
+    def _find_poll(self, title):
         """Find a poll of a given title
         
         Given a title, a search will be made for a poll submission of that
@@ -201,6 +199,6 @@ class RedditPollBot(object):
         # find a submission with a given title
         found = None
         
-        for poll in self.get_polls():
-            if poll[1].title == title:
-                return poll[1]
+        for poll in self.user.get_submitted():
+            if poll.title == title:
+                return poll
