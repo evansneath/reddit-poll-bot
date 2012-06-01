@@ -16,8 +16,10 @@ class RedditPollBot(object):
     
     Attributes:
         reddit_api: Holds the Reddit API object for use in class methods
+        user: Holds the bot's user information
     """
     reddit_api = None
+    user = None
 
     def __init__(self, user_agent):
         """Initialize the RedditPollBot class
@@ -44,6 +46,7 @@ class RedditPollBot(object):
         """
         # login bot to reddit
         self.reddit_api.login(username, password)
+        self.user = self.reddit_api.get_redditor(username)
     
     def create_poll(self, subreddit, title, description, candidates):
         """Creates a bot submission and the platform for a poll
