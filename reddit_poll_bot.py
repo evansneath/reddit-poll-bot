@@ -166,12 +166,12 @@ class RedditPollBot(object):
         
         for comment in poll.comments:
             # get the first value surrounded by asterisks
-            vote = re.search('\*\w*\*', str(comment))
+            vote = re.search('\*[a-zA-Z0-9_ ]*\*', str(comment))
             
             if vote is not None:
                 # return lowercase version of the key without asterisks
                 vote = vote.group()
-                vote = vote[1:len(vote)-1].lower()
+                vote = vote[1:len(vote)-1].trim().lower()
                 
                 # determine if the italicized value found is valid for the poll
                 if (candidates is not None and vote in candidates) or candidates is None:
