@@ -16,7 +16,7 @@ class RedditPollBot(object):
     
     Attributes:
         reddit_api: Holds the Reddit API object for use in class methods
-        user: Holds the bot's user information
+        user: Holds the bot's API user object for finding submissions
     """
     reddit_api = None
     user = None
@@ -91,7 +91,7 @@ class RedditPollBot(object):
             True on success, False on failure
         """
         # delete submission created by the bot with the specified title
-        poll = self.find_poll(title)
+        poll = self._find_poll(title)
         
         deleted = False
         if poll is not None:
