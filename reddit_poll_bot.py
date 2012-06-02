@@ -170,8 +170,7 @@ class RedditPollBot(object):
             
             if vote is not None:
                 # return lowercase version of the key without asterisks
-                vote = vote.group()
-                vote = vote[1:len(vote)-1].trim().lower()
+                vote = vote.group()[1:-1].strip().lower()
                 
                 # determine if the italicized value found is valid for the poll
                 if (candidates is not None and vote in candidates) or candidates is None:
