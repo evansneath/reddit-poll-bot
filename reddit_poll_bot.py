@@ -128,8 +128,8 @@ class RedditPollBot(object):
         text += 'RESULTS:                             \r\n\r\n'
         
         # display vote numbers
-        for vote in votes.items():
-            text += ' * ' + str(vote[0]) + ' : ' + str(vote[1]) + '\r\n'
+        for candidate, count in votes.items():
+            text += ' * ' + candidate + ' : ' + str(count) + '\r\n'
         
         # display a winner if desired
         if show_winner:
@@ -156,7 +156,7 @@ class RedditPollBot(object):
         Returns:
             Dict with candidate name as key and number of votes as value
         """
-        votes = dict()
+        votes = {}
         
         # find a poll of the given title
         poll = self._find_poll(title)
@@ -166,7 +166,7 @@ class RedditPollBot(object):
         
         for comment in poll.comments:
             # get the first value surrounded by asterisks
-            vote = re.search('\*[a-zA-Z0-9_ ]*\*', str(comment))
+            vote = re.search('\*[a-zA-Z0-9_ ]*\*', comment)
             
             if vote is not None:
                 # return lowercase version of the key without asterisks
