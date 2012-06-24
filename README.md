@@ -57,8 +57,8 @@ candidates = ['dog', 'cat', 'lizard']
 title = 'Vote for the cutest animal!'
 
 # print each poll choice and its vote count
-for vote in bot.peek_votes(title, candidates).items():
-    print 'choice: ' + str(vote[0]) + ' votes: ' + str(vote[1])
+for candidate, count in bot.peek_votes(title, candidates).items():
+    print 'choice: ' + candidate + ' votes: ' + str(count)
 ```
 
 ###Ending a poll and posting the results
