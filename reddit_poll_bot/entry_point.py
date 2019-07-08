@@ -71,11 +71,11 @@ def update_post():
     parser = build_parser()
     args = parser.parse_args()
     rpb = create_client(args)
-    rpb.post_votes(args.title, args.choices)
+    exit(not bool(rpb.post_votes(args.title, args.choices)))
 
 
 def delete_post():
     parser = build_parser()
     args = parser.parse_args()
     rpb = create_client(args)
-    rpb.delete_poll(args.title)
+    exit(not bool(rpb.delete_poll(args.title)))

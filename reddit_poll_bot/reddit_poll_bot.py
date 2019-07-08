@@ -79,6 +79,8 @@ class RedditPollBot(object):
         # delete submission created by the bot with the specified title
         poll = self._find_poll(title)
 
+        if poll is None:
+            return False
         poll.delete()
 
         return True
@@ -100,6 +102,8 @@ class RedditPollBot(object):
         """
         # update the submission text with the newest amount of votes
         poll = self._find_poll(title)
+        if poll is None:
+            return False
         votes = self.peek_votes(title, candidates)
         print(votes)
 
@@ -145,6 +149,9 @@ class RedditPollBot(object):
 
         # find a poll of the given title
         poll = self._find_poll(title)
+
+        if poll is None:
+            return False
 
         for comment in poll.comments:
             # get the first value surrounded by asterisks
