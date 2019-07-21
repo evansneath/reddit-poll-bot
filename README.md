@@ -1,18 +1,18 @@
-#Reddit Poll Bot
+# Reddit Poll Bot
 
-##Description
+## Description
 A poll creation and management bot for Reddit.
 
 Using the Reddit API for communication, this class can create, destroy, and
 manage polls for users on the popular social news site, [Reddit](http://reddit.com).
 
-##Author
+## Author
 Created by [Evan Sneath](http://github.com/evansneath).
 
-##License
+## License
 This software licensed under the [Open Software License v3.0](http://www.opensource.org/licenses/OSL-3.0).
 
-##Dependencies
+## Dependencies
 In order to run, this software requires the following dependencies:
 
 * [Python 2.7](http://python.org/)
@@ -20,11 +20,11 @@ In order to run, this software requires the following dependencies:
 
 The class might work with other versions of the dependencies, but they have not been tested.
 
-##Usage
+## Usage
 The Reddit Poll Bot class is easy to use and modify for specific needs. Documentation is kept up-to-date
 in the source code. Here are some simple use case examples.
 
-###Creating a new bot and submission
+### Creating a new bot and submission
 This creates a new poll and automatically generates body text for the submission using the title, description, and candidates list.
 ```python
 import reddit_poll_bot
@@ -47,7 +47,7 @@ asterisks. For example:
 My favorite animals are *lizard*s!
 ```
 
-###Seeing intermittent poll results
+### Seeing intermittent poll results
 The ```peek_vote()``` method of the Reddit Vote Bot can be used to unintrusively see results at any 
 time in the polling process. Below is an example where all valid choices and their current voting 
 results are printed.
@@ -61,7 +61,7 @@ for candidate, count in bot.peek_votes(title, candidates).items():
     print 'choice: ' + candidate + ' votes: ' + str(count)
 ```
 
-###Ending a poll and posting the results
+### Ending a poll and posting the results
 Reddit Vote Bot will automatically tally all of the votes and edit the submission for everyone to see. 
 Entering the candidates list restricts accepted entries to those candidates.
 ```python
@@ -71,7 +71,7 @@ candidates = ['dog', 'cat', 'lizard']
 bot.post_votes(title, candidates, show_winner=True)
 ```
 
-###Deleting a poll
+### Deleting a poll
 This removes the poll submission from Reddit.
 ```python
 # delete this poll forever
